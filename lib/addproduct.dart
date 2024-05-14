@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AddProductListPage extends StatefulWidget {
   const AddProductListPage({Key? key}) : super(key: key);
@@ -19,22 +20,23 @@ class _AddProductListPageState extends State<AddProductListPage> {
   String? _selectedCategory;
   String? _selectedProductName;
 
-  void _addProduct(productName, description,productID, date, costPerUnit, totalStock,
-      totalAmountPaid, selectedCategory) async {
+  void _addProduct(productName, description, productID, date, costPerUnit,
+      totalStock, totalAmountPaid, selectedCategory) async {
     final dio = Dio();
+     String clientApi = dotenv.get("CLIENT_API", fallback: "");
     try {
       var bodyValues = {
         "productname": productName,
         "description": description,
-        "productID":productID,
+        "productID": productID,
         "date": date,
         "category": selectedCategory,
         "costperunit": costPerUnit,
         "totalstock": totalStock,
         "totalamount": totalAmountPaid
       };
-
-      final response = await dio.post('https://consultancy-server.onrender.com/addproduct',
+     
+      final response = await dio.post('$clientApi/addproduct',
           data: bodyValues);
       if (response.statusCode == 200) {
         // Show success message
@@ -193,8 +195,15 @@ class _AddProductListPageState extends State<AddProductListPage> {
                       print('Total Stock: $totalStock');
                       print('Total Amount Paid: $totalAmountPaid');
                       print('Category: $_selectedCategory');
-                      _addProduct(productName, description, productID, date, costPerUnit,
-                          totalStock, totalAmountPaid, _selectedCategory);
+                      _addProduct(
+                          productName,
+                          description,
+                          productID,
+                          date,
+                          costPerUnit,
+                          totalStock,
+                          totalAmountPaid,
+                          _selectedCategory);
                       setState(() {
                         _selectedProductName = null;
                         _selectedCategory = null;

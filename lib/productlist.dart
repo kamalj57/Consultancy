@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ProductListPage extends StatefulWidget {
   const ProductListPage({Key? key}) : super(key: key);
@@ -18,12 +19,12 @@ class _ProductListPageState extends State<ProductListPage> {
     super.initState();
     _fetchProducts();
   }
-
+  String clientApi = dotenv.get("CLIENT_API", fallback: "");
   Future<void> _fetchProducts() async {
-    final dio = Dio();
+    final dio = Dio(); 
     try {
       final response =
-          await dio.get('https://consultancy-server.onrender.com/getproduct');
+          await dio.get('$clientApi/getproduct');
       if (response.statusCode == 200) {
         final List<dynamic> data = response.data;
         setState(() {
@@ -43,7 +44,7 @@ class _ProductListPageState extends State<ProductListPage> {
 
     try {
       final response =
-          await dio.delete('https://consultancy-server.onrender.com/deleteproduct/$productId');
+          await dio.delete('$clientApi/deleteproduct/$productId');
       if (response.statusCode == 200) {
         setState(() {
           productList.removeAt(index);

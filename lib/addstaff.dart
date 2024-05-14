@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AddStaff extends StatefulWidget {
   const AddStaff({Key? key}) : super(key: key);
@@ -21,6 +22,7 @@ class _AddStaffState extends State<AddStaff> {
 
   Future<void> addstaff(name, staffID,age, gender, mobile) async {
     final dio = Dio();
+     String clientApi = dotenv.get("CLIENT_API", fallback: "");
     try {
       var bodyvalues = {
         "staffname": name,
@@ -29,9 +31,9 @@ class _AddStaffState extends State<AddStaff> {
         "gender": gender,
         "contact": mobile
       };
-
+     
       final response =
-          await dio.post('https://consultancy-server.onrender.com/addstaff', data: bodyvalues);
+          await dio.post('$clientApi/addstaff', data: bodyvalues);
       if (response.statusCode == 200) {
         // Show success message
         // ignore: use_build_context_synchronously

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class ViewStaff extends StatefulWidget {
   const ViewStaff({Key? key}) : super(key: key);
@@ -11,11 +12,11 @@ class ViewStaff extends StatefulWidget {
 
 class _ViewStaffState extends State<ViewStaff> {
   List<Map<String, dynamic>> staffList = [];
-
+  String clientApi = dotenv.get("CLIENT_API", fallback: "");
   void _fetchData() async {
     final dio = Dio();
     try {
-      final response = await dio.get('https://consultancy-server.onrender.com/staffdetails');
+      final response = await dio.get('$clientApi/staffdetails');
       if (response.statusCode == 200) {
         final List<dynamic> data = response.data;
         setState(() {
@@ -40,7 +41,7 @@ class _ViewStaffState extends State<ViewStaff> {
   final staffId = staffList[index]['_id'];
 
   try {
-    final response = await dio.delete('https://consultancy-server.onrender.com/deletestaff/$staffId');
+    final response = await dio.delete('$clientApi/deletestaff/$staffId');
     if (response.statusCode == 200) {
      
       setState(() {
